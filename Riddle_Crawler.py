@@ -22,7 +22,7 @@ class Botao:
     def __init__(self, x, y):
         self.x = x
         self.y = y
-        # w = width e h = height eu acho
+        # w = width e h = height
         self.w = 22
         self.h = 12
         self.clicked = False # Adicione um atributo para rastrear se o botão foi clicado
@@ -41,9 +41,13 @@ class Botao:
 # 
 class App:
     def __init__(self):
+        # Iniciando tela e carregando assets
         pyxel.init(160, 120, title="Riddle Crawler", fps=60)
         pyxel.load("assets/riddle.pyxres")
-        self.botao = Botao(50, 50)    
+
+        # Carregando Elementos da tela
+        self.botao1 = Botao(25, 50)
+        self.botao2 = Botao(105, 50)    
         # self.far_cloud = [(-10, 75), (40, 65), (90, 60)]
         self.near_cloud = [(10, 25), (70, 35), (120, 15)]
 
@@ -68,8 +72,12 @@ class App:
         
         if pyxel.btn(pyxel.MOUSE_BUTTON_LEFT):
              # Se retornar as coordenadas do botão iguais as do mouse, então o botão foi clicado
-                if self.botao.in_button(pyxel.mouse_x, pyxel.mouse_y):
-                    self.botao.clicked = True
+                if self.botao1.in_button(pyxel.mouse_x, pyxel.mouse_y):
+                    self.botao1.clicked = True
+                
+            # Se retornar as coordenadas do botão iguais as do mouse, então o botão foi clicado
+                if self.botao2.in_button(pyxel.mouse_x, pyxel.mouse_y):
+                    self.botao2.clicked = True
     
          # Atualização da tela
         if self.scene == SCENE_TITLE:
@@ -80,7 +88,7 @@ class App:
             self.update_gameover_scene()
 
     def update_title_scene(self):
-        if pyxel.btnp(pyxel.KEY_RETURN) or pyxel.btnp(pyxel.GAMEPAD1_BUTTON_X):
+        if pyxel.btnp(pyxel.KEY_RETURN):
              self.scene = SCENE_PLAY
 
     # Atualizar com a lógica dos Botões
@@ -88,7 +96,11 @@ class App:
         pass
 
     def update_gameover_scene(self):
-        pass
+        # Reiniciando o botão
+        self.botao2.clicked = False
+
+        if pyxel.btnp(pyxel.KEY_RETURN):
+            self.scene = SCENE_PLAY
 
 
     # FUNÇÃO QUE DESENHA O JOGO E O CENÁRIO
@@ -104,6 +116,8 @@ class App:
             self.draw_play_scene()
         elif self.scene == SCENE_GAMEOVER:
             self.draw_gameover_scene()
+
+
         # Desenha o céu
         pyxel.blt(0, 88, 0, 0, 88, 160, 32)
 
@@ -117,9 +131,6 @@ class App:
 
         # Desenha nuvens
         offset = (pyxel.frame_count // 16) % 160
-        # for i in range(2):
-        #     for x, y in self.far_cloud:
-        #         pyxel.blt(x + i * 160 - offset, y, 0, 64, 32, 32, 8, 12)
 
         offset = (pyxel.frame_count // 8) % 160
         for i in range(2):
@@ -132,13 +143,19 @@ class App:
         pyxel.text(55, 55, "APERTE ENTER", 8)
 
     def draw_play_scene(self):
-        self.botao.draw()
-        if self.botao.clicked:
-            pyxel.text(self.botao.x - 30, self.botao.y + 15, "Voce clicou no botao", 1)
+        self.botao1.draw()
+        self.botao2.draw()
+        if self.botao1.clicked:
+            self.botao1.clicked = False
+            pyxel.text(self.botao.x, self.botao.y, "Voce clicou no botao", 1)
+    
+
+        if self.botao2.clicked:
+            self.scene = SCENE_GAMEOVER
 
     def draw_gameover_scene(self):
-        pyxel.text(43, 66, "GAME OVER", 8)
-        pyxel.text(31, 126, "APERTE ENTER", 13)
+        pyxel.text(60, 66, "GAME OVER", 8)
+        pyxel.text(55, 76, "APERTE ENTER", 1)
         
 
 # Início do Jogo
