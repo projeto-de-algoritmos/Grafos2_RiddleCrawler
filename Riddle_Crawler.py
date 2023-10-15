@@ -35,8 +35,6 @@ class Botao:
     def in_button(self, x, y):
         return self.x <= x <= self.x + self.w and self.y <= y <= self.y + self.h
 
-
-# 
 class App:
     def __init__(self):
         # Iniciando tela e carregando assets
@@ -100,7 +98,6 @@ class App:
         if pyxel.btnp(pyxel.KEY_RETURN):
             self.scene = SCENE_PLAY
 
-
     # FUNÇÃO QUE DESENHA O JOGO E O CENÁRIO
     def draw(self):
      
@@ -114,7 +111,6 @@ class App:
             self.draw_play_scene()
         elif self.scene == SCENE_GAMEOVER:
             self.draw_gameover_scene()
-
 
         # Desenha o céu
         pyxel.blt(0, 88, 0, 0, 88, 160, 32)
@@ -139,10 +135,14 @@ class App:
     def draw_title_scene(self):
         pyxel.text(25, 45, "Bem-vindo ao Riddle Crawler", 0)
         pyxel.text(55, 55, "APERTE ENTER", 8)
+        pyxel.blt(70, 60, 0, 0, 0, 16, 16)
 
     def draw_play_scene(self):
         self.botao1.draw()
         self.botao2.draw()
+        pyxel.blt(12, 8, 0, 128, 0, 8, 8)
+        pyxel.text(20, 10, ":100 pontos", 1)
+
         if self.botao1.clicked:
             pyxel.text(self.botao1.x - 18, self.botao1.y + 15, "Voce clicou no botao", 1)
 
@@ -152,7 +152,6 @@ class App:
     def draw_gameover_scene(self):
         pyxel.text(60, 66, "GAME OVER", 8)
         pyxel.text(55, 76, "APERTE ENTER", 1)
-        
 
 # Início do Jogo
 App()
