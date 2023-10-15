@@ -67,12 +67,11 @@ class App:
             pyxel.quit()
         
         if pyxel.btn(pyxel.MOUSE_BUTTON_LEFT):
-            # Se retornar as coordenadas do botão iguais as do mouse, então o botão foi clicado
-            if self.botao.in_button(pyxel.mouse_x, pyxel.mouse_y):
-                self.botao.clicked = True
-        
-        # Atualização da tela inicial para tela de jogo e gameover
-        self.background.update()
+             # Se retornar as coordenadas do botão iguais as do mouse, então o botão foi clicado
+                if self.botao.in_button(pyxel.mouse_x, pyxel.mouse_y):
+                    self.botao.clicked = True
+    
+         # Atualização da tela
         if self.scene == SCENE_TITLE:
             self.update_title_scene()
         elif self.scene == SCENE_PLAY:
@@ -80,21 +79,31 @@ class App:
         elif self.scene == SCENE_GAMEOVER:
             self.update_gameover_scene()
 
-        def update_title_scene(self):
-            if pyxel.btnp(pyxel.KEY_RETURN) or pyxel.btnp(pyxel.GAMEPAD1_BUTTON_X):
-                self.scene = SCENE_PLAY
+    def update_title_scene(self):
+        if pyxel.btnp(pyxel.KEY_RETURN) or pyxel.btnp(pyxel.GAMEPAD1_BUTTON_X):
+             self.scene = SCENE_PLAY
 
-        def update_play_scene(self):
-            pass
+    # Atualizar com a lógica dos Botões
+    def update_play_scene(self):
+        pass
+
+    def update_gameover_scene(self):
+        pass
+
 
     # FUNÇÃO QUE DESENHA O JOGO E O CENÁRIO
     def draw(self):
      
+        # Cor de fundo
         pyxel.cls(12)
-        self.botao.draw()
 
-        pyxel.text(30, 5, "Bem-vindo ao Riddle Crawler", 1)
-
+        # Seção que verifica os estados do jogo para desenhar com base nisso
+        if self.scene == SCENE_TITLE:
+            self.draw_title_scene()
+        elif self.scene == SCENE_PLAY:
+            self.draw_play_scene()
+        elif self.scene == SCENE_GAMEOVER:
+            self.draw_gameover_scene()
         # Desenha o céu
         pyxel.blt(0, 88, 0, 0, 88, 160, 32)
 
@@ -117,10 +126,20 @@ class App:
             for x, y in self.near_cloud:
                 pyxel.blt(x + i * 160 - offset, y, 0, 0, 32, 56, 8, 12)
 
-        
+    # Seção das funções de desenhar de cada cena
+    def draw_title_scene(self):
+        pyxel.text(25, 45, "Bem-vindo ao Riddle Crawler", pyxel.frame_count % 8)
+        pyxel.text(55, 55, "APERTE ENTER", 8)
+
+    def draw_play_scene(self):
+        self.botao.draw()
         if self.botao.clicked:
             pyxel.text(self.botao.x - 30, self.botao.y + 15, "Voce clicou no botao", 1)
 
+    def draw_gameover_scene(self):
+        pyxel.text(43, 66, "GAME OVER", 8)
+        pyxel.text(31, 126, "APERTE ENTER", 13)
+        
 
 # Início do Jogo
 App()
