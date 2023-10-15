@@ -1,4 +1,7 @@
 import pyxel
+import json
+import random
+from graph import randomWeightedGraph, dijkstra
 
 SCENE_TITLE = 0
 SCENE_PLAY = 1
@@ -8,7 +11,6 @@ def load_bgm(msc, filename, snd1, snd2, snd3):
     # Loads a json file for 8bit BGM generator by frenchbread.
     # Each track is stored in snd1, snd2 and snd3 of the sound
     # respectively and registered in msd of the music.
-    import json
 
     with open(filename, "rt") as file:
         bgm = json.loads(file.read())
@@ -16,6 +18,47 @@ def load_bgm(msc, filename, snd1, snd2, snd3):
         pyxel.sound(snd2).set(*bgm[1])
         pyxel.sound(snd3).set(*bgm[2])
         pyxel.music(msc).set([snd1], [snd2], [snd3], [])
+
+def generate_game():
+    file = open("./assets/json/objects.json")
+    data = json.load(file)
+    objects = data["objects"]
+    file.close()
+    
+    file = open("./assets/json/traps.json")
+    data = json.load(file)
+    traps = data["traps"]
+    file.close()
+    
+    num_nodes = 15
+    num_edges = num_nodes + int(num_nodes / 2)
+    min_weight = 10
+    max_weight = 17
+    start_node = 0
+    end_node = 14
+    
+    shortest_path = [14]
+
+    # Loop to create a graph that has a path between 0 and 14
+    while(shortest_path == [14]):
+        graph = randomWeightedGraph(num_nodes, num_edges, min_weight, max_weight)
+        shortest_path, shortest_distance = dijkstra(graph, start_node, end_node)
+
+    # Print the edges and their weights
+    # for node1, edges in graph.items():
+    #     for node2, weight in edges.items():
+    #         print(f"Edge ({node1}, {node2}) has weight {weight}")
+
+    # print(f"Nodes: {num_nodes} Edges: {num_edges}")
+    # print(f"Shortest path from {start_node} to {end_node}: {shortest_path}")
+    # print(f"Shortest distance from {start_node} to {end_node}: {shortest_distance}")
+
+    random.shuffle(objects)
+    
+    for i in range(15):
+        objects[i]["node"] = i
+        
+    return shortest_path, graph, objects, traps
 
 # Botão 
 class Botao:
@@ -36,7 +79,7 @@ class Botao:
         return self.x <= x <= self.x + self.w and self.y <= y <= self.y + self.h
 
 class App:
-    def __init__(self):
+    def __init__(self): 
         # Iniciando tela e carregando assets
         pyxel.init(160, 120, title="Riddle Crawler", fps=60)
         pyxel.load("assets/riddle.pyxres")
@@ -45,6 +88,7 @@ class App:
         self.botao1 = Botao(25, 50)
         self.botao2 = Botao(105, 50)    
         self.near_cloud = [(10, 25), (70, 35), (120, 15)]
+        # self.far_cloud = [(-10, 75), (40, 65), (90, 60)]
 
         # Carregando Música do Jogo
         pyxel.sound(0).set("a3a2c1a1", "p", "7", "s", 5)
@@ -70,7 +114,7 @@ class App:
                 if self.botao1.in_button(pyxel.mouse_x, pyxel.mouse_y):
                     self.botao1.clicked = True
                 
-            # Se retornar as coordenadas do botão iguais as do mouse, então o botão foi clicado
+            # Se retornar as coordenadas do botão iguais as do mouse, então o botão foi clicado       
                 if self.botao2.in_button(pyxel.mouse_x, pyxel.mouse_y):
                     self.botao2.clicked = True
     
@@ -97,7 +141,7 @@ class App:
 
         if pyxel.btnp(pyxel.KEY_RETURN):
             self.scene = SCENE_PLAY
-
+     
     # FUNÇÃO QUE DESENHA O JOGO E O CENÁRIO
     def draw(self):
      
