@@ -1,0 +1,154 @@
+{
+    "objects": [
+    {
+        "name": "Pá",
+        "riddles" : [
+            "Tenho uma borda afiada, mas não sou uma faca. Sou usada para mover a terra. O que sou?",
+            "Sou uma ferramenta que faz um buraco sem fazer barulho. O que sou?",
+            "Tenho uma cabeça plana e uma haste longa. Os jardineiros me usam para várias tarefas. O que sou?",
+            "Tenho um cabo longo e uma cabeça larga, sou uma ferramenta de jardim. O que sou?",
+            "Embora eu seja uma ferramenta de jardim, minha forma se assemelha a uma lâmina afiada. O que sou?"]
+    },
+    {
+        "name": "Janela",
+        "riddles": [
+            "Você pode ver o mundo lá fora através de mim, mas não pode atravessar. O que sou?",
+            "Quando está quente, você me abre; quando está frio, você me fecha. O que sou?",
+            "O que sou eu que você olha através de todos os dias, mas não pode tocar?",
+            "Tenho vidro, mas não sou um óculos. O que sou?",
+            "Pode ser de madeira ou metal, e você me fecha à noite. O que sou?"
+        ]
+    },
+    {
+        "name": "Telefone",
+        "riddles": [
+            "Sou um aparelho que toca, mas não sou um instrumento musical. O que sou?",
+            "Posso enviar mensagens sem papel ou caneta. O que sou?",
+            "Eu vibro e faço barulho, mas não sou um alarme. O que sou?",
+            "Estou sempre no bolso ou na bolsa das pessoas, mas não sou uma carteira. O que sou?",
+            "Posso ser fixo ou móvel, e as pessoas me usam para se comunicar. O que sou?"
+        ]
+    },
+    {
+        "name": "Faca",
+        "riddles": [
+            "Tenho uma ponta afiada, mas não sou um lápis. O que sou?",
+            "Sou frequentemente encontrado na cozinha, mas também sou usada ao ar livre. O que sou?",
+            "Tenho um gume, mas não sou uma espada. O que sou?",
+            "Sou perigoso, mas posso te ajudar se souber me usar. O que sou?",
+            "Posso cortar, mas não sou uma tesoura. O que sou?"
+        ]
+    },
+    {
+        "name": "Copo",
+        "riddles": [
+            "Sou quebradiço, mas não sou uma porcelana. O que sou?",
+            "Estou frequentemente empilhado no armário da cozinha. O que sou?",
+            "Posso ser usado para medir ingredientes em receitas. O que sou?",
+            "Você pode encontrar diferentes tipos de mim. O que sou?",
+            "Sou um recipiente de vidro ou plástico com uma base plana. O que sou?"
+        ]
+    },
+    {
+        "name": "Caneta",
+        "riddles": [
+            "Posso ser encontrada em várias cores, mas não sou um arco-íris. O que sou?",
+            "Sou seu aliado quando precisa armazenar seus pensamentos. O que sou?",
+            "Tenho um corpo longo e fino e muitas vezes transparente. O que sou?",
+            "Estou sempre presente em reuniões importantes, principalmente quando se lida com decisões. O que sou?",
+            "Tenho uma tampa que protege minha ponta quando não estou sendo usada. O que sou?"
+        ]
+    },
+    {
+        "name": "Água",
+        "riddles": [
+            "Sou necessária para cultivar plantas, mas não sou o solo. O que sou?",
+            "Corro em rios, lagos e oceanos, mas não tenho pernas. O que sou?",
+            "Estou sempre em movimento, fluindo de um lugar para outro. O que sou?",
+            "Posso estar quente ou fria, mas não sou uma panela. O que sou?",
+            "Sou clara como o cristal e posso estar em um rio ou oceano. O que sou?"
+        ]
+    },
+    {
+        "name": "Corrente",
+        "riddles": [
+            "Sou usada para prender coisas juntas, mas não sou uma cola. O que sou?",
+            "Estou associada a elos que se conectam para formar um todo. O que sou?",
+            "Você pode me ver em circuitos elétricos, mas não sou um fio. O que sou?",
+            "Sou usada para transmitir força ou movimento de um lugar para outro. O que sou?",
+            "Posso ser encontrada em bicicletas, joias e muito mais. O que sou?"
+        ]
+    },
+    {
+        "name": "Sapato",
+        "riddles": [
+            "Você me coloca um de cada vez. O que sou?",
+            "Sou frequentemente comprado em pares, mas não sou luvas. O que sou?",
+            "Posso ser usado para correr, mas não sou uma pista. O que sou?",
+            "Você me amarra para que eu não caia, mas não sou uma corda. O que sou?",
+            "As crianças muitas vezes crescem rápido demais para usar os mesmos. O que sou?"
+        ]
+    },
+    {
+        "name": "Computador",
+        "riddles": [
+            "Tenho teclas, mas não sou um piano. O que sou?",
+            "Eu processo informações, mas não sou um cérebro humano. O que sou?",
+            "Tenho uma tela, mas não sou uma janela. O que sou?",
+            "Tenho um processador, mas não sou um chef. O que sou?",
+            "Sou especialista em cálculos, mas não sou uma calculadora. O que sou?"
+        ]
+    },
+    {
+        "name": "Carro",
+        "riddles": [
+            "Tenho um motor, mas não sou uma máquina de lavar. O que sou?",
+            "Tenho portas e janelas, mas não sou uma casa. O que sou?",
+            "Sou uma invenção que transformou a sociedade. O que sou?",
+            "Às vezes sou de luxo, às vezes sou econômico. O que sou?",
+            "Tenho muitas funções e modelos diferentes. O que sou?"
+        ]
+    },
+    {
+        "name": "Lâmpada",
+        "riddles": [
+            "Ilumino o ambiente, mas não sou o sol. O que sou?",
+            "Venho em muitas formas, mas todas possuem a mesma função, O que sou?",
+            "Quando está escuro, as pessoas me acendem. O que sou?",
+            "Posso ser instalado no teto, objetos de mesa e até no chão. O que sou?",
+            "Possuo apenas uma função, e sem energia não posso fazer nada. O que sou?"
+        ]
+    },
+    {
+        "name": "Espelho",
+        "riddles": [
+            "Sou usado para pentear o cabelo e fazer a maquiagem. O que sou?",
+            "Estou pendurado na parede. O que sou?",
+            "Você me olha todas as manhãs. O que sou?",
+            "Quando quebrado, traz má sorte. O que sou?",
+            "Posso ser decorativo e funcional ao mesmo tempo. O que sou?"
+        ]
+    },
+    {
+        "name": "Martelo",
+        "riddles": [
+            "Posso ser de diferentes tamanhos e pesos para diferentes tarefas. O que sou?",
+            "Muitas vezes estou em um kit de ferramentas. O que sou?",
+            "Sou útil para fixar e desmontar coisas com um golpe. O que sou?",
+            "Possuo um golpe poderoso, capaz de construir ou destruir. O que sou?",
+            "Tenho uma extremidade plana e outra pontiaguda. O que sou?"
+        ]
+    },
+    {
+        "name": "Mesa",
+        "riddles": [
+            "Tenho uma superfície plana que pode ser grande ou pequena. O que sou?",
+            "Posso ser feita de madeira, vidro, metal ou outros materiais. O que sou?",
+            "Estou sempre no centro da sala de reuniões, e uma reunião sem mim é muito desagradável. O que sou?",
+            "Tenho pernas mas não corro, tenho tampo mas não abro. O que sou?",
+            "As pessoas tendem a estar ao meu redor, principalmente ao comer. O que sou?"
+        ]
+    }
+    ]
+    
+}
