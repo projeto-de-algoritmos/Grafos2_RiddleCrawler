@@ -28,8 +28,6 @@ class Botao:
         self.clicked = False # Adicione um atributo para rastrear se o botão foi clicado
     
     def draw(self):
-
-
         # self.x e self.y são as coordenadas na tela, 0 é o banco de imagens, 80 e 0 é as coordenadas no banco, elf.w e self.h se refere a width e height da imagem
         pyxel.blt(self.x, self.y, 0, 80, 0, self.w, self.h)
 
@@ -48,7 +46,6 @@ class App:
         # Carregando Elementos da tela
         self.botao1 = Botao(25, 50)
         self.botao2 = Botao(105, 50)    
-        # self.far_cloud = [(-10, 75), (40, 65), (90, 60)]
         self.near_cloud = [(10, 25), (70, 35), (120, 15)]
 
         # Carregando Música do Jogo
@@ -97,6 +94,7 @@ class App:
 
     def update_gameover_scene(self):
         # Reiniciando o botão
+        self.botao1.clicked = False
         self.botao2.clicked = False
 
         if pyxel.btnp(pyxel.KEY_RETURN):
@@ -139,16 +137,14 @@ class App:
 
     # Seção das funções de desenhar de cada cena
     def draw_title_scene(self):
-        pyxel.text(25, 45, "Bem-vindo ao Riddle Crawler", pyxel.frame_count % 8)
+        pyxel.text(25, 45, "Bem-vindo ao Riddle Crawler", 0)
         pyxel.text(55, 55, "APERTE ENTER", 8)
 
     def draw_play_scene(self):
         self.botao1.draw()
         self.botao2.draw()
         if self.botao1.clicked:
-            self.botao1.clicked = False
-            pyxel.text(self.botao.x, self.botao.y, "Voce clicou no botao", 1)
-    
+            pyxel.text(self.botao1.x - 18, self.botao1.y + 15, "Voce clicou no botao", 1)
 
         if self.botao2.clicked:
             self.scene = SCENE_GAMEOVER
