@@ -129,6 +129,8 @@ class App:
                     
                 if(self.hp > 50):
                     self.hp = 50
+            
+            self.counter += 1
         elif(self.guess == self.traps[0] or self.guess == self.traps[1]):
             # Errou na armadilha
             self.hp -= 25
@@ -139,11 +141,10 @@ class App:
             # Errou no grafo
             self.hp -= random.randint(10, 15)
         
-        if(self.counter == len(self.path - 1)):
+        if(self.counter == len(self.path) - 1):
             # Encerra o jogo
             pass
             
-        i += 1
         # Continua o jogo
 
     # FUNÇÃO QUE ATUALIZA O QUE OCORRE NO JOGO
@@ -167,7 +168,9 @@ class App:
             self.path, self.graph, self.objects, self.traps = generate_game()
             self.randRiddle = random.randint(0, 4)
             self.reset = False
-            
+        
+        self.answer = self.objects[self.path[self.counter]]["name"]
+    
         name_list = []
         name_list.append(self.objects[self.path[self.counter]]["name"])
         name_list.append(self.objects[1]["name"])
@@ -188,15 +191,23 @@ class App:
             # Se retornar as coordenadas do botão iguais as do mouse, então o botão foi clicado
             if self.botao1.in_button(pyxel.mouse_x, pyxel.mouse_y):
                 self.botao1.clicked = True
+                self.guess = self.botao1.name
+                self.check_answer()
     
             if self.botao2.in_button(pyxel.mouse_x, pyxel.mouse_y):
                 self.botao2.clicked = True
+                self.guess = self.botao2.name
+                self.check_answer()
             
             if self.botao3.in_button(pyxel.mouse_x, pyxel.mouse_y):
                 self.botao3.clicked = True
+                self.guess = self.botao3.name
+                self.check_answer()
                 
             if self.botao4.in_button(pyxel.mouse_x, pyxel.mouse_y):
                 self.botao4.clicked = True
+                self.guess = self.botao4.name
+                self.check_answer()
     
     
     def update_gameover_scene(self):
