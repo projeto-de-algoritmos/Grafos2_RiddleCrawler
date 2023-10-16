@@ -43,15 +43,16 @@ def generate_game():
     while(shortest_path == [14]):
         graph = randomWeightedGraph(num_nodes, num_edges, min_weight, max_weight)
         shortest_path, shortest_distance = dijkstra(graph, start_node, end_node)
-
+        
     # Print the edges and their weights
-    # for node1, edges in graph.items():
-    #     for node2, weight in edges.items():
-    #         print(f"Edge ({node1}, {node2}) has weight {weight}")
+    for node1, edges in graph.items():
+        for node2, weight in edges.items():
+            print(f"Edge ({node1}, {node2}) has weight {weight}")
+            
 
-    # print(f"Nodes: {num_nodes} Edges: {num_edges}")
-    # print(f"Shortest path from {start_node} to {end_node}: {shortest_path}")
-    # print(f"Shortest distance from {start_node} to {end_node}: {shortest_distance}")
+    print(f"Nodes: {num_nodes} Edges: {num_edges}")
+    print(f"Shortest path from {start_node} to {end_node}: {shortest_path}")
+    print(f"Shortest distance from {start_node} to {end_node}: {shortest_distance}")
 
     random.shuffle(objects)
     
@@ -64,18 +65,19 @@ def generate_game():
 
 # Botão 
 class Botao:
-    def __init__(self, x, y):
+    def __init__(self, x, y, name):
         self.x = x
         self.y = y
         # w = width e h = height
         self.w = 22
         self.h = 8
         self.clicked = False # Adicione um atributo para rastrear se o botão foi clicado
+        self.name = name
     
-    def draw(self, name):
+    def draw(self):
         # self.x e self.y são as coordenadas na tela, 0 é o banco de imagens, 80 e 0 é as coordenadas no banco, elf.w e self.h se refere a width e height da imagem
         pyxel.blt(self.x, self.y, 0, 80, 4, self.w, self.h)
-        pyxel.text(self.x, self.y + 9, name, 1)
+        pyxel.text(self.x, self.y + 9, self.name, 1)
 
     # Função que verifica se as coordenadas recebidas se equivalem as do botão
     def in_button(self, x, y):
@@ -87,17 +89,19 @@ class App:
         pyxel.init(160, 120, title="Riddle Crawler", fps=60)
         pyxel.load("assets/riddle.pyxres")
 
-        # Carregando Elementos da tela
-        self.botao1 = Botao(26, 45)
-        self.botao2 = Botao(106, 45)
-        self.botao3 = Botao(26, 65)
-        self.botao4 = Botao(106, 65)    
+        # Carregando Elementos da tela  
         self.near_cloud = [(10, 25), (70, 35), (120, 15)]
         self.path = []
+        self.counter = 0
         self.graph = []
         self.objects = []
+        self.randRiddle = None
         self.traps = []
         self.reset = True
+        self.answer = None
+        self.answer_neighbor = None
+        self.guess = None
+        self.hp = 50
         # self.far_cloud = [(-10, 75), (40, 65), (90, 60)]
 
         # Carregando Música do Jogo
@@ -114,20 +118,39 @@ class App:
         pyxel.mouse(True)
         pyxel.run(self.update, self.draw)
 
+    def check_answer(self):
+        if(self.answer == self.guess):
+            # Acertou  
+            if(self.hp < 50):
+                if(self.counter == 0):
+                    self.hp += 10
+                else:
+                    self.hp += self.graph[self.path[self.counter]][self.path[self.counter + 1]]
+                    
+                if(self.hp > 50):
+                    self.hp = 50
+        elif(self.guess == self.traps[0] or self.guess == self.traps[1]):
+            # Errou na armadilha
+            self.hp -= 25
+            if(self.hp <= 0):
+                pass    
+            else:
+                pass
+        else:
+            # Errou no grafo
+            self.hp -= random.randint(10, 15)
+        
+        if(self.counter == len(self.path - 1)):
+            # Encerra o jogo
+            pass
+            
+        i += 1
+
     # FUNÇÃO QUE ATUALIZA O QUE OCORRE NO JOGO
     def update(self):
         if pyxel.btnp(pyxel.KEY_Q):
             pyxel.quit()
-        
-        if pyxel.btn(pyxel.MOUSE_BUTTON_LEFT):
-            # Se retornar as coordenadas do botão iguais as do mouse, então o botão foi clicado
-            if self.botao1.in_button(pyxel.mouse_x, pyxel.mouse_y):
-                self.botao1.clicked = True
-                
-            # Se retornar as coordenadas do botão iguais as do mouse, então o botão foi clicado       
-            if self.botao2.in_button(pyxel.mouse_x, pyxel.mouse_y):
-                self.botao2.clicked = True
-    
+
         # Atualização da tela
         if self.scene == SCENE_TITLE:
             self.update_title_scene()
@@ -139,15 +162,47 @@ class App:
     def update_title_scene(self):
         if pyxel.btnp(pyxel.KEY_RETURN):
             self.scene = SCENE_PLAY
+        
+        if(self.reset):
+            self.path, self.graph, self.objects, self.traps = generate_game()
+            self.randRiddle = random.randint(0, 4)
+            self.reset = False
+            
+        self.answer_neighbor = self.graph[self.path[self.counter]][0]
+        
+        self.botao1 = Botao(26, 45, self.objects[self.path[self.counter]]["name"])
+        self.botao2 = Botao(106, 45, self.objects[1]["name"])
+        self.botao3 = Botao(26, 65, self.traps[0])
+        self.botao4 = Botao(106, 65, self.traps[1])  
 
     # Atualizar com a lógica dos Botões
     def update_play_scene(self):
-        pass
+        if(self.reset):
+            self.path, self.graph, self.objects, self.traps = generate_game()
+            self.randRiddle = random.randint(0, 4)
+            self.reset = False
+            
+        if pyxel.btn(pyxel.MOUSE_BUTTON_LEFT):
+            # Se retornar as coordenadas do botão iguais as do mouse, então o botão foi clicado
+            if self.botao1.in_button(pyxel.mouse_x, pyxel.mouse_y):
+                self.botao1.clicked = True
+    
+            if self.botao2.in_button(pyxel.mouse_x, pyxel.mouse_y):
+                self.botao2.clicked = True
+            
+            if self.botao3.in_button(pyxel.mouse_x, pyxel.mouse_y):
+                self.botao3.clicked = True
+                
+            if self.botao4.in_button(pyxel.mouse_x, pyxel.mouse_y):
+                self.botao4.clicked = True
+    
     
     def update_gameover_scene(self):
         # Reiniciando o botão
         self.botao1.clicked = False
         self.botao2.clicked = False
+        self.botao3.clicked = False
+        self.botao4.clicked = False
 
         if pyxel.btnp(pyxel.KEY_RETURN):
             self.reset = True
@@ -193,16 +248,13 @@ class App:
         pyxel.blt(70, 60, 0, 0, 0, 16, 16)
 
     def draw_play_scene(self):
-        if(self.reset):
-                self.path, self.graph, self.objects, self.traps = generate_game()
-                self.reset = False
-        pyxel.text(4, 28, self.objects[0]["riddles"][0], 1)
-        self.botao1.draw(self.objects[0]["name"])
-        self.botao2.draw(self.objects[1]["name"])
-        self.botao3.draw(self.traps[0])
-        self.botao4.draw(self.traps[1])
+        pyxel.text(4, 28, self.objects[self.path[self.counter]]["riddles"][self.randRiddle], 1)
+        self.botao1.draw()
+        self.botao2.draw()
+        self.botao3.draw()
+        self.botao4.draw()
         pyxel.blt(12, 8, 0, 128, 0, 8, 8)
-        pyxel.text(20, 10, ":100 pontos", 1)
+        pyxel.text(20, 9, f":{self.hp}", 1)
 
         if self.botao1.clicked:
             pyxel.text(self.botao1.x - 18, self.botao1.y + 15, "Voce clicou no botao", 1)
