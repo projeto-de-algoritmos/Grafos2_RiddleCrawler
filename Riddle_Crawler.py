@@ -58,6 +58,8 @@ def generate_game():
     for i in range(15):
         objects[i]["node"] = i
         
+    random.shuffle(traps)
+        
     return shortest_path, graph, objects, traps
 
 # Botão 
@@ -67,12 +69,13 @@ class Botao:
         self.y = y
         # w = width e h = height
         self.w = 22
-        self.h = 12
+        self.h = 8
         self.clicked = False # Adicione um atributo para rastrear se o botão foi clicado
     
-    def draw(self):
+    def draw(self, name):
         # self.x e self.y são as coordenadas na tela, 0 é o banco de imagens, 80 e 0 é as coordenadas no banco, elf.w e self.h se refere a width e height da imagem
-        pyxel.blt(self.x, self.y, 0, 80, 0, self.w, self.h)
+        pyxel.blt(self.x, self.y, 0, 80, 4, self.w, self.h)
+        pyxel.text(self.x, self.y + 9, name, 1)
 
     # Função que verifica se as coordenadas recebidas se equivalem as do botão
     def in_button(self, x, y):
@@ -85,9 +88,16 @@ class App:
         pyxel.load("assets/riddle.pyxres")
 
         # Carregando Elementos da tela
-        self.botao1 = Botao(25, 50)
-        self.botao2 = Botao(105, 50)    
+        self.botao1 = Botao(26, 45)
+        self.botao2 = Botao(106, 45)
+        self.botao3 = Botao(26, 65)
+        self.botao4 = Botao(106, 65)    
         self.near_cloud = [(10, 25), (70, 35), (120, 15)]
+        self.path = []
+        self.graph = []
+        self.objects = []
+        self.traps = []
+        self.reset = True
         # self.far_cloud = [(-10, 75), (40, 65), (90, 60)]
 
         # Carregando Música do Jogo
@@ -110,15 +120,15 @@ class App:
             pyxel.quit()
         
         if pyxel.btn(pyxel.MOUSE_BUTTON_LEFT):
-             # Se retornar as coordenadas do botão iguais as do mouse, então o botão foi clicado
-                if self.botao1.in_button(pyxel.mouse_x, pyxel.mouse_y):
-                    self.botao1.clicked = True
+            # Se retornar as coordenadas do botão iguais as do mouse, então o botão foi clicado
+            if self.botao1.in_button(pyxel.mouse_x, pyxel.mouse_y):
+                self.botao1.clicked = True
                 
             # Se retornar as coordenadas do botão iguais as do mouse, então o botão foi clicado       
-                if self.botao2.in_button(pyxel.mouse_x, pyxel.mouse_y):
-                    self.botao2.clicked = True
+            if self.botao2.in_button(pyxel.mouse_x, pyxel.mouse_y):
+                self.botao2.clicked = True
     
-         # Atualização da tela
+        # Atualização da tela
         if self.scene == SCENE_TITLE:
             self.update_title_scene()
         elif self.scene == SCENE_PLAY:
@@ -128,33 +138,25 @@ class App:
 
     def update_title_scene(self):
         if pyxel.btnp(pyxel.KEY_RETURN):
-             self.scene = SCENE_PLAY
+            self.scene = SCENE_PLAY
 
     # Atualizar com a lógica dos Botões
     def update_play_scene(self):
         pass
-
+    
     def update_gameover_scene(self):
         # Reiniciando o botão
         self.botao1.clicked = False
         self.botao2.clicked = False
 
         if pyxel.btnp(pyxel.KEY_RETURN):
-            self.scene = SCENE_PLAY
-     
+            self.reset = True
+            self.scene = SCENE_TITLE
+    
     # FUNÇÃO QUE DESENHA O JOGO E O CENÁRIO
     def draw(self):
-     
         # Cor de fundo
         pyxel.cls(12)
-
-        # Seção que verifica os estados do jogo para desenhar com base nisso
-        if self.scene == SCENE_TITLE:
-            self.draw_title_scene()
-        elif self.scene == SCENE_PLAY:
-            self.draw_play_scene()
-        elif self.scene == SCENE_GAMEOVER:
-            self.draw_gameover_scene()
 
         # Desenha o céu
         pyxel.blt(0, 88, 0, 0, 88, 160, 32)
@@ -175,6 +177,15 @@ class App:
             for x, y in self.near_cloud:
                 pyxel.blt(x + i * 160 - offset, y, 0, 0, 32, 56, 8, 12)
 
+        # Seção que verifica os estados do jogo para desenhar com base nisso
+        if self.scene == SCENE_TITLE:
+            self.draw_title_scene()
+        elif self.scene == SCENE_PLAY:
+            self.draw_play_scene()
+        elif self.scene == SCENE_GAMEOVER:
+            self.draw_gameover_scene()
+            
+
     # Seção das funções de desenhar de cada cena
     def draw_title_scene(self):
         pyxel.text(25, 45, "Bem-vindo ao Riddle Crawler", 0)
@@ -182,8 +193,14 @@ class App:
         pyxel.blt(70, 60, 0, 0, 0, 16, 16)
 
     def draw_play_scene(self):
-        self.botao1.draw()
-        self.botao2.draw()
+        if(self.reset):
+                self.path, self.graph, self.objects, self.traps = generate_game()
+                self.reset = False
+        pyxel.text(4, 28, self.objects[0]["riddles"][0], 1)
+        self.botao1.draw(self.objects[0]["name"])
+        self.botao2.draw(self.objects[1]["name"])
+        self.botao3.draw(self.traps[0])
+        self.botao4.draw(self.traps[1])
         pyxel.blt(12, 8, 0, 128, 0, 8, 8)
         pyxel.text(20, 10, ":100 pontos", 1)
 
