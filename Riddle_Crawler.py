@@ -3,9 +3,11 @@ import json
 import random
 from graph import randomWeightedGraph, dijkstra
 
+# Variáveis que indicam a tela que o jogo está
 SCENE_TITLE = 0
 SCENE_PLAY = 1
 SCENE_GAMEOVER = 2
+SCENE_WIN = 3
 
 def load_bgm(msc, filename, snd1, snd2, snd3):
     # Loads a json file for 8bit BGM generator by frenchbread.
@@ -84,15 +86,22 @@ class Botao:
 class App:
     def __init__(self): 
         # Iniciando tela e carregando assets
-        pyxel.init(160, 120, title="Riddle Crawler", fps=60)
+        pyxel.init(240, 120, title="Riddle Crawler", fps=60)
         pyxel.load("assets/riddle.pyxres")
 
         # Carregando Elementos da tela
-        self.botao1 = Botao(26, 45)
-        self.botao2 = Botao(106, 45)
-        self.botao3 = Botao(26, 65)
-        self.botao4 = Botao(106, 65)    
+        self.botao1 = Botao(64, 50)
+        self.botao2 = Botao(156, 50)
+        self.botao3 = Botao(64, 70)
+        self.botao4 = Botao(156, 70)    
         self.near_cloud = [(10, 25), (70, 35), (120, 15)]
+        
+        self.balao_x = 210
+        self.balao_y = 69
+        self.move_up = True
+        self.move_speed = 0.2
+
+        self.count = 0 
         self.path = []
         self.graph = []
         self.objects = []
@@ -127,7 +136,32 @@ class App:
             # Se retornar as coordenadas do botão iguais as do mouse, então o botão foi clicado       
             if self.botao2.in_button(pyxel.mouse_x, pyxel.mouse_y):
                 self.botao2.clicked = True
-    
+        
+        # Movimento do balão
+         # Verifica se o balão deve se mover para cima ou para baixo
+        if self.move_up:
+            self.balao_y -= self.move_speed
+        else:
+            self.balao_y += self.move_speed
+
+        # Inverte a direção quando o balão atinge as alturas limite
+        if self.balao_y <= 50:
+            self.move_up = False
+        elif self.balao_y >= 70:
+            self.move_up = True
+            
+
+
+        # balao_y = 69
+        # Verifica se o balão atingiu a parte inferior da tela
+        if self.balao_y < 70:
+            self.balao_y -= 1
+            self.count += 1
+        
+        if self.count > 0:
+            self.balao_y += 1
+            self.count -= 1
+
         # Atualização da tela
         if self.scene == SCENE_TITLE:
             self.update_title_scene()
@@ -135,8 +169,11 @@ class App:
             self.update_play_scene()
         elif self.scene == SCENE_GAMEOVER:
             self.update_gameover_scene()
+        elif self.scene == SCENE_WIN:
+            self.update_win_scene()
 
     def update_title_scene(self):
+
         if pyxel.btnp(pyxel.KEY_RETURN):
             self.scene = SCENE_PLAY
 
@@ -144,6 +181,7 @@ class App:
     def update_play_scene(self):
         pass
     
+    # Atualiza o gameover
     def update_gameover_scene(self):
         # Reiniciando o botão
         self.botao1.clicked = False
@@ -152,6 +190,10 @@ class App:
         if pyxel.btnp(pyxel.KEY_RETURN):
             self.reset = True
             self.scene = SCENE_TITLE
+
+    # atualiza com a vitória
+    def update_win_scene():
+        pass
     
     # FUNÇÃO QUE DESENHA O JOGO E O CENÁRIO
     def draw(self):
@@ -159,15 +201,19 @@ class App:
         pyxel.cls(12)
 
         # Desenha o céu
-        pyxel.blt(0, 88, 0, 0, 88, 160, 32)
+        pyxel.blt(0, 88, 0, 0, 88, 240, 32)
 
-        # Desenha montanha
-        pyxel.blt(0, 88, 0, 0, 64, 160, 24, 12)
+        # Desenha montanhas 
+        pyxel.blt(0, 88, 0, 0, 64, 240, 24, 12)
+        pyxel.blt(130, 88, 0, 0, 64, 240, 24, 12)
+
+        # Desenha Balão
+        pyxel.blt(self.balao_x, self.balao_y, 0, 152, 24, 16, 16)
 
         # Desenha árvores
-        offset = pyxel.frame_count % 160
+        offset = pyxel.frame_count % 240
         for i in range(2):
-            pyxel.blt(i * 160 - offset, 104, 0, 0, 48, 160, 16, 12)
+            pyxel.blt(i * 240 - offset, 104, 0, 0, 48, 240, 16, 12)
 
         # Desenha nuvens
         offset = (pyxel.frame_count // 16) % 160
@@ -184,23 +230,29 @@ class App:
             self.draw_play_scene()
         elif self.scene == SCENE_GAMEOVER:
             self.draw_gameover_scene()
-            
+        elif self.scene == SCENE_WIN:
+            self.draw_win_scene()
 
     # Seção das funções de desenhar de cada cena
     def draw_title_scene(self):
-        pyxel.text(25, 45, "Bem-vindo ao Riddle Crawler", 0)
-        pyxel.text(55, 55, "APERTE ENTER", 8)
-        pyxel.blt(70, 60, 0, 0, 0, 16, 16)
+        
+        # Desenhando título do jogo
+        pyxel.text(90, 45, "RIDDLE CRAWLER", 0)
+        pyxel.text(93, 55, "APERTE ENTER", pyxel.frame_count % 8)
+
+        # Desenhando aranha
+        pyxel.blt(107, 60, 0, 0, 0, 16, 16)
 
     def draw_play_scene(self):
         if(self.reset):
                 self.path, self.graph, self.objects, self.traps = generate_game()
                 self.reset = False
-        pyxel.text(4, 28, self.objects[0]["riddles"][0], 1)
         self.botao1.draw(self.objects[0]["name"])
         self.botao2.draw(self.objects[1]["name"])
         self.botao3.draw(self.traps[0])
         self.botao4.draw(self.traps[1])
+
+        # Barra de HP
         pyxel.blt(12, 8, 0, 128, 0, 8, 8)
         pyxel.text(20, 10, ":100 pontos", 1)
 
@@ -211,8 +263,11 @@ class App:
             self.scene = SCENE_GAMEOVER
 
     def draw_gameover_scene(self):
-        pyxel.text(60, 66, "GAME OVER", 8)
-        pyxel.text(55, 76, "APERTE ENTER", 1)
+        pyxel.text(105, 66, "GAME OVER", 8)
+        pyxel.text(93, 76, "VOLTE COM ENTER", 1)
+
+    def draw_win_scene(self):
+        pass
 
 # Início do Jogo
 App()
