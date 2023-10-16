@@ -7,7 +7,7 @@ from graph import randomWeightedGraph, dijkstra
 SCENE_TITLE = 0
 SCENE_PLAY = 1
 SCENE_GAMEOVER = 2
-SCENE_WIN = 3
+SCENE_RESULT = 3
 
 def load_bgm(msc, filename, snd1, snd2, snd3):
     # Loads a json file for 8bit BGM generator by frenchbread.
@@ -96,6 +96,7 @@ class App:
         self.botao4 = Botao(156, 70)    
         self.near_cloud = [(10, 25), (70, 35), (120, 15)]
         
+        # Atributos do balão inflável
         self.balao_x = 210
         self.balao_y = 69
         self.move_up = True
@@ -108,6 +109,11 @@ class App:
         self.traps = []
         self.reset = True
         # self.far_cloud = [(-10, 75), (40, 65), (90, 60)]
+
+        # Variáveis para controlar a resposta do jogador
+        self.resultado_timer = 0
+        self.resultado_message = ""
+        self.show_message = False
 
         # Carregando Música do Jogo
         pyxel.sound(0).set("a3a2c1a1", "p", "7", "s", 5)
@@ -123,19 +129,28 @@ class App:
         pyxel.mouse(True)
         pyxel.run(self.update, self.draw)
 
+# --------------------------------------------------------------------------------------------------------------------------------
     # FUNÇÃO QUE ATUALIZA O QUE OCORRE NO JOGO
     def update(self):
         if pyxel.btnp(pyxel.KEY_Q):
             pyxel.quit()
         
         if pyxel.btn(pyxel.MOUSE_BUTTON_LEFT):
-            # Se retornar as coordenadas do botão iguais as do mouse, então o botão foi clicado
+            # Se retornar as coordenadas do botão iguais as do mouse, então o 1° botão foi clicado
             if self.botao1.in_button(pyxel.mouse_x, pyxel.mouse_y):
                 self.botao1.clicked = True
                 
-            # Se retornar as coordenadas do botão iguais as do mouse, então o botão foi clicado       
+            # Se retornar as coordenadas do botão iguais as do mouse, então o 2° botão foi clicado       
             if self.botao2.in_button(pyxel.mouse_x, pyxel.mouse_y):
                 self.botao2.clicked = True
+            
+            # Se retornar as coordenadas do botão iguais as do mouse, então o 3° botão foi clicado      
+            if self.botao3.in_button(pyxel.mouse_x, pyxel.mouse_y):
+                self.botao3.clicked = True
+
+            # Se retornar as coordenadas do botão iguais as do mouse, então o 4° botão foi clicado      
+            if self.botao4.in_button(pyxel.mouse_x, pyxel.mouse_y):
+                self.botao4.clicked = True
         
         # Movimento do balão
          # Verifica se o balão deve se mover para cima ou para baixo
@@ -149,18 +164,6 @@ class App:
             self.move_up = False
         elif self.balao_y >= 70:
             self.move_up = True
-            
-
-
-        # balao_y = 69
-        # Verifica se o balão atingiu a parte inferior da tela
-        if self.balao_y < 70:
-            self.balao_y -= 1
-            self.count += 1
-        
-        if self.count > 0:
-            self.balao_y += 1
-            self.count -= 1
 
         # Atualização da tela
         if self.scene == SCENE_TITLE:
@@ -169,8 +172,9 @@ class App:
             self.update_play_scene()
         elif self.scene == SCENE_GAMEOVER:
             self.update_gameover_scene()
-        elif self.scene == SCENE_WIN:
-            self.update_win_scene()
+        elif self.scene == SCENE_RESULT:
+            self.update_result_scene()
+    
 
     def update_title_scene(self):
 
@@ -179,22 +183,27 @@ class App:
 
     # Atualizar com a lógica dos Botões
     def update_play_scene(self):
-        pass
+        if self.botao3.clicked or self.botao4.clicked:
+            self.scene = SCENE_RESULT
     
     # Atualiza o gameover
     def update_gameover_scene(self):
-        # Reiniciando o botão
+        # Reiniciando os botões
         self.botao1.clicked = False
         self.botao2.clicked = False
+        self.botao3.clicked = False
+        self.botao4.clicked = False
 
         if pyxel.btnp(pyxel.KEY_RETURN):
             self.reset = True
             self.scene = SCENE_TITLE
 
-    # atualiza com a vitória
-    def update_win_scene():
-        pass
-    
+    # atualiza com o resultado de uma resposta
+    def update_result_scene(self):
+            self.show_message = True
+            self.resultado_message = "ACERTOU"
+
+# --------------------------------------------------------------------------------------------------------------------------------
     # FUNÇÃO QUE DESENHA O JOGO E O CENÁRIO
     def draw(self):
         # Cor de fundo
@@ -203,7 +212,7 @@ class App:
         # Desenha o céu
         pyxel.blt(0, 88, 0, 0, 88, 240, 32)
 
-        # Desenha montanhas 
+        # Desenha as montanhas 
         pyxel.blt(0, 88, 0, 0, 64, 240, 24, 12)
         pyxel.blt(130, 88, 0, 0, 64, 240, 24, 12)
 
@@ -230,8 +239,8 @@ class App:
             self.draw_play_scene()
         elif self.scene == SCENE_GAMEOVER:
             self.draw_gameover_scene()
-        elif self.scene == SCENE_WIN:
-            self.draw_win_scene()
+        elif self.scene == SCENE_RESULT:
+            self.draw_result_scene()
 
     # Seção das funções de desenhar de cada cena
     def draw_title_scene(self):
@@ -243,10 +252,12 @@ class App:
         # Desenhando aranha
         pyxel.blt(107, 60, 0, 0, 0, 16, 16)
 
+    # Desenha os cenários quando se inicia o jogo
     def draw_play_scene(self):
         if(self.reset):
                 self.path, self.graph, self.objects, self.traps = generate_game()
                 self.reset = False
+        pyxel.text(4, 28, self.objects[0]["riddles"][0], 1)
         self.botao1.draw(self.objects[0]["name"])
         self.botao2.draw(self.objects[1]["name"])
         self.botao3.draw(self.traps[0])
@@ -266,8 +277,14 @@ class App:
         pyxel.text(105, 66, "GAME OVER", 8)
         pyxel.text(93, 76, "VOLTE COM ENTER", 1)
 
-    def draw_win_scene(self):
-        pass
+    # atualiza com o resultado de uma resposta
+    def draw_result_scene(self):
+        # Desenho do Emoji, para inserir as duas variáveis do Emoji, é só criar uma variavel que controla isso em update
+        pyxel.blt(118, 50, 0, 187, 13, 10, 10)
+        pyxel.text(110, 40, self.resultado_message, pyxel.frame_count % 16)
+        pyxel.text(90, 65, "CONTINUE COM ENTER", 0)
 
+
+# ------------------------------------------------------
 # Início do Jogo
 App()
