@@ -134,8 +134,7 @@ class App:
             self.hp -= 25
             if(self.hp <= 0):
                 pass    
-            else:
-                pass
+            
         else:
             # Errou no grafo
             self.hp -= random.randint(10, 15)
@@ -145,6 +144,7 @@ class App:
             pass
             
         i += 1
+        # Continua o jogo
 
     # FUNÇÃO QUE ATUALIZA O QUE OCORRE NO JOGO
     def update(self):
@@ -168,19 +168,21 @@ class App:
             self.randRiddle = random.randint(0, 4)
             self.reset = False
             
-        self.answer_neighbor = self.graph[self.path[self.counter]][0]
+        name_list = []
+        name_list.append(self.objects[self.path[self.counter]]["name"])
+        name_list.append(self.objects[1]["name"])
+        name_list.append(self.traps[0])
+        name_list.append(self.traps[1])
         
-        self.botao1 = Botao(26, 45, self.objects[self.path[self.counter]]["name"])
-        self.botao2 = Botao(106, 45, self.objects[1]["name"])
-        self.botao3 = Botao(26, 65, self.traps[0])
-        self.botao4 = Botao(106, 65, self.traps[1])  
+        random.shuffle(name_list)
+        
+        self.botao1 = Botao(26, 45, name_list[0])
+        self.botao2 = Botao(106, 45, name_list[1])
+        self.botao3 = Botao(26, 65, name_list[2])
+        self.botao4 = Botao(106, 65, name_list[3])  
 
     # Atualizar com a lógica dos Botões
     def update_play_scene(self):
-        if(self.reset):
-            self.path, self.graph, self.objects, self.traps = generate_game()
-            self.randRiddle = random.randint(0, 4)
-            self.reset = False
             
         if pyxel.btn(pyxel.MOUSE_BUTTON_LEFT):
             # Se retornar as coordenadas do botão iguais as do mouse, então o botão foi clicado
