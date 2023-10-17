@@ -100,7 +100,6 @@ class App:
         self.move_up = True
         self.move_speed = 0.2
 
-        self.count = 0 
         self.path = []
         self.counter = 0
         self.graph = []
@@ -109,27 +108,27 @@ class App:
         self.traps = []
         self.reset = True
         self.answer = None
-        self.answer_neighbor = None
         self.guess = None
         self.hp = 50
+        self.win = False
         # self.far_cloud = [(-10, 75), (40, 65), (90, 60)]
 
-        # Variáveis para controlar a resposta do jogador
-        self.resultado_timer = 0
+        # Variáveis para controlar a resposta do jogador e Emoji
         self.resultado_message = ""
         self.show_message = False
-
+        self.emoji = "right"
+        
         # Carregando Música do Jogo
-        pyxel.sound(0).set("a3a2c1a1", "p", "7", "s", 5)
-        pyxel.sound(1).set("a3a2c2c2", "n", "7742", "s", 10)
-        load_bgm(0, "assets/bgm_title.json", 2, 3, 4)
-        load_bgm(1, "assets/bgm_play.json", 5, 6, 7)
+        # pyxel.sound(0).set("a3a2c1a1", "p", "7", "s", 5)
+        # pyxel.sound(1).set("a3a2c2c2", "n", "7742", "s", 10)
+        # load_bgm(0, "assets/bgm_title.json", 2, 3, 4)
+        # load_bgm(1, "assets/bgm_play.json", 5, 6, 7)
 
         # Começando na tela inicial
         self.scene = SCENE_TITLE
 
         # Carregando música, mouse e o jogo
-        pyxel.playm(0, loop=True)
+        # pyxel.playm(0, loop=True)
         pyxel.mouse(True)
         pyxel.run(self.update, self.draw)
 
@@ -146,21 +145,34 @@ class App:
                     self.hp = 50
             
             self.counter += 1
+            self.emoji = "right"
+            self.resultado_message = "ACERTOU"
+            self.scene = SCENE_RESULT
+            
         elif(self.guess == self.traps[0] or self.guess == self.traps[1]):
             # Errou na armadilha
             self.hp -= 25
             if(self.hp <= 0):
-                pass    
+                # Encerra o jogo, derrota
+                self.scene = SCENE_GAMEOVER    
             
+            self.emoji = 'wrong'
+            self.resultado_message = "ERROU"
+            self.scene = SCENE_RESULT
         else:
             # Errou no grafo
             self.hp -= random.randint(10, 15)
+            if(self.hp <= 0):
+                self.scene = SCENE_GAMEOVER 
+            
+            self.emoji = 'wrong'
+            self.resultado_message = "ERROU"
+            self.scene = SCENE_RESULT
         
         if(self.counter == len(self.path) - 1):
-            # Encerra o jogo
-            pass
-            
-        # Continua o jogo
+            # Encerra o jogo, vitória
+            self.win = True
+            self.scene = SCENE_RESULT
 
     # FUNÇÃO QUE ATUALIZA O QUE OCORRE NO JOGO
     def update(self):
@@ -191,7 +203,8 @@ class App:
     
 
     def update_title_scene(self):
-
+        
+        self.win = False
         if pyxel.btnp(pyxel.KEY_RETURN):
             self.scene = SCENE_PLAY
         
@@ -210,10 +223,10 @@ class App:
         
         random.shuffle(name_list)
         
-        self.botao1 = Botao(26, 45, name_list[0])
-        self.botao2 = Botao(106, 45, name_list[1])
-        self.botao3 = Botao(26, 65, name_list[2])
-        self.botao4 = Botao(106, 65, name_list[3])  
+        self.botao1 = Botao(64, 50, name_list[0])
+        self.botao2 = Botao(156, 50, name_list[1])
+        self.botao3 = Botao(64, 70, name_list[2])
+        self.botao4 = Botao(156, 70, name_list[3])  
 
     # Atualizar com a lógica dos Botões
     def update_play_scene(self):
@@ -243,11 +256,27 @@ class App:
     
     # Atualiza o gameover
     def update_gameover_scene(self):
-        # Reiniciando os botões
+        # Resetando os botões
         self.botao1.clicked = False
         self.botao2.clicked = False
         self.botao3.clicked = False
         self.botao4.clicked = False
+
+        # Resetando o Game
+        self.path = []
+        self.counter = 0
+        self.graph = []
+        self.objects = []
+        self.randRiddle = None
+        self.traps = []
+        self.reset = True
+        self.answer = None
+        self.guess = None
+        self.hp = 50
+
+        # Resetando mensagens
+        self.resultado_message = ""
+        self.show_message = False
 
         if pyxel.btnp(pyxel.KEY_RETURN):
             self.reset = True
@@ -255,8 +284,70 @@ class App:
 
     # atualiza com o resultado de uma resposta
     def update_result_scene(self):
-            self.show_message = True
-            self.resultado_message = "ACERTOU"
+        self.show_message = True
+        
+        # Resetando os botões
+        self.botao1.clicked = False
+        self.botao2.clicked = False
+        self.botao3.clicked = False
+        self.botao4.clicked = False
+        
+        # Acabou o jogo = PERDEU
+        if(self.hp <= 0):
+            self.scene = SCENE_GAMEOVER
+        
+        # Acabou o jogo = VENCEU
+        if self.win == True:
+
+            # Resetando o Game
+            self.path = []
+            self.counter = 0
+            self.graph = []
+            self.objects = []
+            self.randRiddle = None
+            self.traps = []
+            self.reset = True
+            self.answer = None
+            self.guess = None
+            self.hp = 50
+            
+            self.show_message = False
+            self.resultado_message = "VOCE GANHOU!!!"
+
+            if pyxel.btnp(pyxel.KEY_RETURN):
+                self.scene = SCENE_TITLE
+                
+        else:
+            self.answer = self.objects[self.path[self.counter]]["name"]
+    
+            random.shuffle(self.traps)
+            name = self.objects[self.path[self.counter]]["name"]
+            
+            while(name == self.objects[self.path[self.counter]]["name"]):
+                i = random.randint(0, 14)
+                name = self.objects[i]["name"]
+    
+            name_list = []
+            name_list.append(self.objects[self.path[self.counter]]["name"])
+            name_list.append(name)
+            name_list.append(self.traps[0])
+            name_list.append(self.traps[1])
+        
+            random.shuffle(name_list)
+        
+            self.botao1 = Botao(64, 50, name_list[0])
+            self.botao2 = Botao(156, 50, name_list[1])
+            self.botao3 = Botao(64, 70, name_list[2])
+            self.botao4 = Botao(156, 70, name_list[3])  
+
+            self.randRiddle = random.randint(0, 4)
+            self.guess = None
+                        
+            if pyxel.btnp(pyxel.KEY_RETURN):
+                self.show_message = False
+                self.resultado_message = ""
+                self.scene = SCENE_PLAY
+            
 
 # --------------------------------------------------------------------------------------------------------------------------------
     # FUNÇÃO QUE DESENHA O JOGO E O CENÁRIO
@@ -301,11 +392,11 @@ class App:
     def draw_title_scene(self):
         
         # Desenhando título do jogo
-        pyxel.text(90, 45, "RIDDLE CRAWLER", 0)
-        pyxel.text(93, 55, "APERTE ENTER", pyxel.frame_count % 8)
+        pyxel.text(92, 45, "RIDDLE CRAWLER", 0)
+        pyxel.text(96, 55, "APERTE ENTER", 8)
 
         # Desenhando aranha
-        pyxel.blt(107, 60, 0, 0, 0, 16, 16)
+        pyxel.blt(111, 60, 0, 0, 0, 16, 16)
 
     # Desenha os cenários quando se inicia o jogo
     def draw_play_scene(self):
@@ -324,16 +415,30 @@ class App:
             self.scene = SCENE_GAMEOVER
 
     def draw_gameover_scene(self):
-        pyxel.text(105, 66, "GAME OVER", 8)
-        pyxel.text(93, 76, "VOLTE COM ENTER", 1)
+        pyxel.text(102, 66, "GAME OVER", 8)
+        pyxel.text(96, 76, "Aperte Enter", 1)
 
     # atualiza com o resultado de uma resposta
     def draw_result_scene(self):
-        # Desenho do Emoji, para inserir as duas variáveis do Emoji, é só criar uma variavel que controla isso em update
-        pyxel.blt(118, 50, 0, 187, 13, 10, 10)
-        pyxel.text(110, 40, self.resultado_message, pyxel.frame_count % 16)
-        pyxel.text(90, 65, "CONTINUE COM ENTER", 0)
 
+        if self.win == True:
+            # Emoji Win
+            pyxel.blt(115, 50, 0, 187, 13, 10, 10)
+            pyxel.text(92, 40, self.resultado_message, 8)
+            pyxel.text(96, 65, "Aperte Enter", 11)
+            
+            
+        # Desenho do Emoji, para inserir as duas variáveis do Emoji, é só criar uma variavel que controla isso em update
+        elif self.emoji == "right" and self.win == False:
+            pyxel.blt(115, 50, 0, 187, 13, 10, 10)
+            pyxel.text(106, 40, self.resultado_message, 8)
+            pyxel.text(96, 65, "Aperte Enter", 0)
+        else:
+            pyxel.blt(115, 50, 0, 187, 37, 10, 10)
+            pyxel.text(110, 40, self.resultado_message, 8)
+            pyxel.text(96, 65, "Aperte Enter", 0)
+            
+        
 
 # ------------------------------------------------------
 # Início do Jogo
