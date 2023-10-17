@@ -415,7 +415,7 @@ class App:
             self.scene = SCENE_GAMEOVER
 
     def draw_gameover_scene(self):
-        pyxel.text(105, 66, "GAME OVER", 8)
+        pyxel.text(102, 66, "GAME OVER", 8)
         pyxel.text(96, 76, "Aperte Enter", 1)
 
     # atualiza com o resultado de uma resposta
