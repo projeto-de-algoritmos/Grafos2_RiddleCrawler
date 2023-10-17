@@ -14,10 +14,10 @@ O objetivo do projeto é utilizar o Algoritmo de Dijkstra em um jogo de pergunta
 O uso de grafos e Dijkstra faz com que seja mais fácil de controlar a aleatoriedade dos resultados dados por uma função de geração pseudo-aleatória.
 
 ## Screenshots
-![Tela Inicial](./assets/tela_inicial.jpeg)
-![Jogo Rodando](./assets/jogo_rodando.jpeg)
-![Tela de Vitória](./assets/vitoria.jpeg)
-![Tela de Derrota](./assets/derrota.jpeg)
+![Tela Inicial](./assets/images/tela_inicial.jpeg)
+![Jogo Rodando](./assets/images/jogo_rodando.jpeg)
+![Tela de Vitória](./assets/images/vitoria.jpeg)
+![Tela de Derrota](./assets/images/derrota.jpeg)
 
 
 ## Instalação 
@@ -78,13 +78,13 @@ Ao rodarmos o jogo, estaremos na tela inicial. Para iniciar o jogo das charadas 
 
 Com isso, teremos uma charada e teremos que adivinhar de que palavra que se trata, tendo 4 palavras como opção para o jogador escolher por meio dos botões apresentados na tela. 
 
-![Jogo Rodando](./assets/jogo_rodando.jpeg)
+![Jogo Rodando](./assets/images/jogo_rodando.jpeg)
 
 O jogador vai ter uma quantidade de vida contabilizada pelos pontos, indicado por HP no topo da tela. Sempre que uma palavra errada for escolhida, o jogador perde de 10 a 15 pontos de vida, se o contador chegar a 0, o jogador perde o jogo.
 
-![Tela de Derrota](./assets/derrota.jpeg)
+![Tela de Derrota](./assets/images/derrota.jpeg)
 
 Além disso, existem palavras que possam ser respostas para a charada, mas não fazem parte do grafo, são chamadas de traps. Caso o jogador acabe escolhendo uma palavra que é uma trap, então ele perde 25 pontos de vida.
 
 Se o jogador escolher corretamente as palavras, seguindo o caminho do grafo até o último nó, então ele vence o jogo!
-![Tela de Vitória](./assets/vitoria.jpeg)
+![Tela de Vitória](./assets/images/vitoria.jpeg)

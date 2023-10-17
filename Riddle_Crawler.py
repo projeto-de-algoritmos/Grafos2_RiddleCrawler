@@ -119,16 +119,16 @@ class App:
         self.emoji = "right"
         
         # Carregando Música do Jogo
-        # pyxel.sound(0).set("a3a2c1a1", "p", "7", "s", 5)
-        # pyxel.sound(1).set("a3a2c2c2", "n", "7742", "s", 10)
-        # load_bgm(0, "assets/bgm_title.json", 2, 3, 4)
-        # load_bgm(1, "assets/bgm_play.json", 5, 6, 7)
+        pyxel.sound(0).set("a3a2c1a1", "p", "7", "s", 5)
+        pyxel.sound(1).set("a3a2c2c2", "n", "7742", "s", 10)
+        load_bgm(0, "assets/json/bgm_title.json", 2, 3, 4)
+        load_bgm(1, "assets/json/bgm_play.json", 5, 6, 7)
 
         # Começando na tela inicial
         self.scene = SCENE_TITLE
 
         # Carregando música, mouse e o jogo
-        # pyxel.playm(0, loop=True)
+        pyxel.playm(0, loop=True)
         pyxel.mouse(True)
         pyxel.run(self.update, self.draw)
 
