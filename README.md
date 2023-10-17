@@ -13,6 +13,8 @@ O objetivo do projeto é utilizar o Algoritmo de Dijkstra em um jogo de pergunta
 
 O uso de grafos e Dijkstra faz com que seja mais fácil de controlar a aleatoriedade dos resultados dados por uma função de geração pseudo-aleatória.
 
+Vídeo de apresentação se encontra na pasta assets ou no seguinte [link](https://youtu.be/uaFrsWE8Vpo)
+
 ## Screenshots
 ![Tela Inicial](./assets/images/tela_inicial.jpeg)
 ![Jogo Rodando](./assets/images/jogo_rodando.jpeg)
@@ -27,7 +29,7 @@ Descreva os pré-requisitos para rodar o seu projeto e os comandos necessários.
 
 Para começar, baixe o [download oficial da linguagem](https://www.python.org/downloads/).
 
-É preciso instalar o framework Pyxel, uma engine para criação de jogos retrô.
+É preciso instalar o framework Pyxel, uma engine para criação de jogos retrô, sua documentação pode ser encontrada no seguinte [link](https://pypi.org/project/pyxel/).
 
 ## Como instalar
 
